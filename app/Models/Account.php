@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable('user_id','number','balance')]
+#[Fillable('user_id','account_number','balance')]
 #[UseResource(AccountsPostResource::class)]
 class Account extends Model
 {

@@ -15,7 +15,7 @@ class AccountsPostResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'number' => $this->number,
+            'account_number' => $this->account_number,
             'balance' => $this->balance,
         ];
     }
