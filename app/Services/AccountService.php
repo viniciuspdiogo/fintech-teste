@@ -35,6 +35,12 @@ class AccountService
         });
     }
 
+    /**
+     * @param Account $account
+     * @param int $amount
+     * @return Transaction
+     * @throws Throwable
+     */
     public function widthDraw(Account $account, int $amount): Transaction
     {
         return DB::transaction(function () use ($account, $amount) {

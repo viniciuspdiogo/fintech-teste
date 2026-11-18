@@ -18,6 +18,4 @@ class Transaction extends Model
             'balance_momentary' => 'integer',
         ];
     }
-
-
 }
