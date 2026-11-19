@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\AccountsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TransactionsController;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 
 Route::controller(AuthController::class)->group(function (){
@@ -11,6 +11,8 @@ Route::controller(AuthController::class)->group(function (){
     Route::post('/register',  'register');
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
 });
+
+Route::middleware('auth:sanctum')->get('/user', fn (Request $request) => $request->user());
 
 Route::prefix('accounts')->middleware('auth:sanctum')->group(function () {
     Route::controller(AccountsController::class)->group(function () {
