@@ -15,6 +15,16 @@ class AccountsController extends Controller
 
     /**
      * @param AccountsPostRequest $request
+     * @return AccountsPostResource
+     * @throws AccountNotFoundException
+     */
+    public function findByUser(AccountsPostRequest $request)
+    {
+        $account = $request->user()->account ?? throw new AccountNotFoundException();
+        return new AccountsPostResource($account->refresh());
+    }
+    /**
+     * @param AccountsPostRequest $request
      * @param AccountService $service
      * @return AccountsPostResource
      * @throws AccountNotFoundException|Throwable
@@ -30,12 +40,12 @@ class AccountsController extends Controller
      * @param AccountsPostRequest $request
      * @param AccountService $service
      * @return AccountsPostResource
-     * @throws AccountNotFoundException
+     * @throws AccountNotFoundException|Throwable
      */
     public function withdraw(AccountsPostRequest $request, AccountService $service)
     {
         $account = $request->user()->account ?? throw new AccountNotFoundException();
-        $service->widthDraw($account, $request->validated('amount'));
+        $service->widthdraw($account, $request->validated('amount'));
         return new AccountsPostResource($account->refresh());
     }
 }

@@ -23,7 +23,7 @@ class AccountsPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'integer', 'min:1'],
+            'amount' => ['sometimes', 'integer', 'min:1'],
         ];
     }
 }

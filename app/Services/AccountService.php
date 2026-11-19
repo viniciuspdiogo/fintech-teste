@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enum\TransactionType;
+use App\Enum\TransactionTypeEnum;
 use App\Exceptions\InsufficientFundsException;
 use App\Models\Account;
 use App\Models\Transaction;
@@ -28,7 +28,7 @@ class AccountService
             $account->update(['balance' => $newBalance]);
 
             return $account->transactions()->create([
-                'type' => TransactionType::Deposit,
+                'type' => TransactionTypeEnum::Deposit,
                 'amount' => $amount,
                 'balance_momentary' => $newBalance,
             ]);
@@ -41,12 +41,12 @@ class AccountService
      * @return Transaction
      * @throws Throwable
      */
-    public function widthDraw(Account $account, int $amount): Transaction
+    public function widthdraw(Account $account, int $amount): Transaction
     {
         return DB::transaction(function () use ($account, $amount) {
             $account = Account::lockForUpdate()->findOrFail($account->id);
 
-            if($account->balance < $amount) {
+            if ($account->balance < $amount) {
                 throw new InsufficientFundsException();
             }
             $newBalance = $account->balance - $amount;
@@ -54,7 +54,7 @@ class AccountService
             $account->update(['balance' => $newBalance]);
 
             return $account->transactions()->create([
-                'type' => TransactionType::Withdraw,
+                'type' => TransactionTypeEnum::Withdraw,
                 'amount' => $amount,
                 'balance_momentary' => $newBalance,
             ]);
