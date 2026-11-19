@@ -36,6 +36,8 @@ class TransactionsRequest extends FormRequest
     {
         return [
             'limit' => ['sometimes', 'boolean'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ];
     }
 }

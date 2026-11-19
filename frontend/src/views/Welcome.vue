@@ -97,7 +97,6 @@ async function onRegister() {
                     <input
                         id="register-name"
                         v-model="registerForm.name"
-                        type="email"
                         placeholder="Insira o seu Nome"
                         class="mt-2 w-full rounded border px-3 py-2 bg-neutral-900 "
                         required

@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Welcome from "@/views/Welcome.vue";
 import Dashboard from "@/views/Dashboard.vue";
+import Withdraw from "@/views/Withdraw.vue";
+import Deposit from "@/views/Deposit.vue";
 
 import { useAuthStore } from '@/stores/auth';
 
@@ -17,6 +19,18 @@ const router = createRouter({
           path: '/dashboard',
           name: 'Dashboard',
           component: Dashboard,
+          meta: { auth: true },
+      },
+      {
+          path: '/withdraw',
+          name: 'Withdraw',
+          component: Withdraw,
+          meta: { auth: true },
+      },
+      {
+          path: '/deposit',
+          name: 'Deposit',
+          component: Deposit,
           meta: { auth: true },
       },
   ],

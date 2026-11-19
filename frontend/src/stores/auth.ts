@@ -44,14 +44,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function register(
-        registerName: string,
-        registerEmail: string,
-        registerPassword: string,
+        name: string,
+        email: string,
+        password: string,
     ) {
         const { data } = await api.post('/register', {
-            registerName,
-            registerEmail,
-            registerPassword,
+            name,
+            email,
+            password,
         });
         setToken(data.data.token);
         user.value = data.data.user ?? null

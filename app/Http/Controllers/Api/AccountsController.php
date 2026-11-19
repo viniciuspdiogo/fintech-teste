@@ -21,7 +21,8 @@ class AccountsController extends Controller
     public function findByUser(AccountsPostRequest $request)
     {
         $account = $request->user()->account ?? throw new AccountNotFoundException();
-        return new AccountsPostResource($account->refresh());
+        return (new AccountsPostResource($account->refresh()))
+            ->additional(['message' => 'Conta encontrada com sucesso.']);
     }
     /**
      * @param AccountsPostRequest $request
@@ -33,7 +34,8 @@ class AccountsController extends Controller
     {
         $account = $request->user()->account ?? throw new AccountNotFoundException();
         $service->deposit($account, $request->validated('amount'));
-        return new AccountsPostResource($account->refresh());
+        return (new AccountsPostResource($account->refresh()))
+            ->additional(['message' => 'Depósito realizado com sucesso.']);;
     }
 
     /**
@@ -46,6 +48,7 @@ class AccountsController extends Controller
     {
         $account = $request->user()->account ?? throw new AccountNotFoundException();
         $service->widthdraw($account, $request->validated('amount'));
-        return new AccountsPostResource($account->refresh());
+        return (new AccountsPostResource($account->refresh()))
+            ->additional(['message' => 'Saque realizado com sucesso.']);;
     }
 }
