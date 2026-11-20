@@ -3,7 +3,8 @@ import {onMounted, ref} from "vue";
 import {api} from '@/services/api';
 import AccountBalanceCard from '@/components/AccountBalanceCard.vue';
 import {formatCurrencyFromCents} from "@/utils/formatters";
-import {RouterLink} from 'vue-router';
+import {RouterLink, useRouter} from 'vue-router';
+import {useAuthStore} from '@/stores/auth';
 
 interface Transaction {
     type: 'withdraw' | 'deposit' | string;
@@ -29,6 +30,7 @@ const filters = ref<TransactionFilters>({
 const transactions = ref<Transaction[]>([]);
 const loading = ref(false);
 const filterError = ref<string | null>(null);
+
 const isWithdraw = (transaction: Transaction) => transaction.type === 'withdraw';
 
 const buildParams = (): TransactionFilters => {

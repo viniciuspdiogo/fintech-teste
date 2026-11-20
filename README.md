@@ -99,4 +99,13 @@ DB_URL=<Internal Database URL do PostgreSQL no Render>
 RUN_SEEDERS=false
 ```
 
-O Render define a variável `PORT` automaticamente. A imagem compila o Vue em `frontend/` e serve a interface e a API pelo mesmo serviço. A cada inicialização, o container executa `php artisan migrate --force`. Para preencher um ambiente de demonstração, configure `RUN_SEEDERS=true`; isso cria o usuário `teste@exemplo.com` com a senha `123`, portanto não habilite essa opção em produção. O endereço de produção ainda não está configurado neste projeto. Adicione aqui o link após a publicação.
+O Render define a variável `PORT` automaticamente. A imagem compila o Vue em `frontend/` e serve a interface e a API pelo mesmo serviço. A cada inicialização, o container executa `php artisan migrate --force`. Para preencher um ambiente de demonstração, configure `RUN_SEEDERS=true`; isso cria o usuário `teste@exemplo.com` com a senha `123`, portanto não habilite essa opção em produção.
+
+### Aplicação publicada
+
+https://fintech-teste.onrender.com/
+
+**Usuário de teste**
+
+- E-mail: `teste@exemplo.com`
+- Senha: `123`
