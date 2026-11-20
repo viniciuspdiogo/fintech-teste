@@ -29,7 +29,7 @@ const filters = ref<TransactionFilters>({
 const transactions = ref<Transaction[]>([]);
 const loading = ref(false);
 const filterError = ref<string | null>(null);
-const isWithdraw = (transaction) => transaction.type === 'withdraw';
+const isWithdraw = (transaction: Transaction) => transaction.type === 'withdraw';
 
 const buildParams = (): TransactionFilters => {
     const params: TransactionFilters = {}
@@ -126,7 +126,7 @@ onMounted(fetchTransactions)
                             id="start-date"
                             v-model="filters.start_date"
                             type="date"
-                            :max="endDate || undefined"
+                            :max="filters.end_date || undefined"
                             class="rounded-sm border border-neutral-600 bg-neutral-800 px-2.5 py-1.5 text-sm text-white"
                         />
                     </div>
@@ -137,7 +137,7 @@ onMounted(fetchTransactions)
                             id="end-date"
                             v-model="filters.end_date"
                             type="date"
-                            :min="startDate || undefined"
+                            :min="filters.start_date || undefined"
                             class="rounded-sm border border-neutral-600 bg-neutral-800 px-2.5 py-1.5 text-sm text-white"
                         />
                     </div>

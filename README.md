@@ -1,58 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Fintech
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API para gerenciamento de contas digitais, com cadastro e autenticação de usuários, consulta de saldo, depósitos, saques e histórico de transações.
 
-## About Laravel
+## Decisões técnicas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Laravel 13 e PHP 8.3** para a API e as regras de negócio.
+- **Laravel Sanctum** para autenticação por token nas rotas protegidas.
+- **Services** para concentrar operações de conta e transação, mantendo os controllers focados no fluxo HTTP.
+- Saldos e valores são armazenados como inteiros. Depósitos e saques são executados em transações de banco de dados com bloqueio da conta, e cada operação registra o saldo resultante.
+- **Vue 3, TypeScript, Vue Router, Pinia e Vite** compõem o frontend, mantido em `frontend/` e integrado à API Laravel.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Como rodar localmente
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Pré-requisitos: PHP 8.3+, Composer e Node.js 22.18+ (ou 24.12+) com npm.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Na raiz do projeto, instale as dependências do backend e prepare o ambiente. O projeto usa MySQL, então tenha o serviço instalado e em execução:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+No `.env` da raiz, configure a conexão MySQL com os dados do seu ambiente local. Crie o banco indicado em `DB_DATABASE` antes de executar as migrations:
 
-## Contributing
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nome_do_banco
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Rode as migrations e os dados de demonstração:
 
-## Code of Conduct
+```bash
+php artisan migrate --seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+No arquivo `frontend/.env`, configure a URL da API local:
 
-## Security Vulnerabilities
+```dotenv
+VITE_API_URL=http://127.0.0.1:8000/api
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Inicie o backend e o frontend em terminais separados:
 
-## License
+Terminal 1:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan serve
+```
+
+Terminal 2, a partir da raiz:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+O backend fica disponível em `http://127.0.0.1:8000` e o Vite informa o endereço do frontend ao iniciar. O seeder cria dados de demonstração.
+
+## Testes e rotas da API
+
+Execute os testes automatizados das rotas da API com:
+
+```bash
+php artisan test --testsuite=Api
+```
+
+Rotas disponíveis:
+
+```terminaloutput
+GET|HEAD   api/accounts/account ............................................................................. Api\AccountsController@findByUser
+POST       api/accounts/deposit ................................................................................ Api\AccountsController@deposit
+GET|HEAD   api/accounts/transactions .............................................................. Api\TransactionsController@listTransactions
+POST       api/accounts/withdraw .............................................................................. Api\AccountsController@withdraw
+POST       api/login ................................................................................................. Api\AuthController@login
+POST       api/logout ............................................................................................... Api\AuthController@logout
+POST       api/register ........................................................................................... Api\AuthController@register
+GET|HEAD   api/user ......................................................................................................... routes/api.php:15
+GET|HEAD   api/{fallbackPlaceholder} ........................................................................................ routes/api.php:30
+```
+
+## Deploy
+
+O projeto pode ser publicado no Render como um serviço Docker usando o `Dockerfile` da raiz. Crie um banco PostgreSQL no Render e configure estas variáveis no serviço:
+
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=<chave gerada com php artisan key:generate --show>
+APP_URL=<URL pública do serviço no Render>
+DB_CONNECTION=pgsql
+DB_URL=<Internal Database URL do PostgreSQL no Render>
+RUN_SEEDERS=false
+```
+
+O Render define a variável `PORT` automaticamente. A imagem compila o Vue em `frontend/` e serve a interface e a API pelo mesmo serviço. A cada inicialização, o container executa `php artisan migrate --force`. Para preencher um ambiente de demonstração, configure `RUN_SEEDERS=true`; isso cria o usuário `teste@exemplo.com` com a senha `123`, portanto não habilite essa opção em produção. O endereço de produção ainda não está configurado neste projeto. Adicione aqui o link após a publicação.

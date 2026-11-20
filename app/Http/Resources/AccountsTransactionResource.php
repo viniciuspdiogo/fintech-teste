@@ -19,7 +19,7 @@ class AccountsTransactionResource extends JsonResource
             'type_label' => $this->type->label(),
             'amount' => $this->amount,
             'balance_momentary' => $this->balance_momentary,
-            'created_at' => $this->created_at->timezone('America/Sao_Paulo')->format('d/m/Y H:i')
+            'created_at' => $this->created_at->timezone(config('app.display_timezone'))->format('d/m/Y H:i')
         ];
     }
 }

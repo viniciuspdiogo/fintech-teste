@@ -24,7 +24,10 @@ class DemoSeeder extends Seeder
 
             $account = Account::firstOrCreate(
                 ['user_id' => $user->id],
-                ['balance' => 0],
+                [
+                    'balance' => 0,
+                    'account_number' => 'ACC-' . $user->id
+                ],
             );
 
             if ($account->transactions()->exists()) {
@@ -32,14 +35,14 @@ class DemoSeeder extends Seeder
             }
 
             $operations = [
-                [TransactionTypeEnum::Deposit,  200000, 30],
-                [TransactionTypeEnum::Withdraw,  50000, 25],
-                [TransactionTypeEnum::Deposit,  120000, 20],
-                [TransactionTypeEnum::Withdraw,  80000, 15],
-                [TransactionTypeEnum::Withdraw,  35000, 10],
-                [TransactionTypeEnum::Deposit,   60000,  5],
-                [TransactionTypeEnum::Withdraw,  15000,  2],
-                [TransactionTypeEnum::Deposit,   25000,  1],
+                [TransactionTypeEnum::Deposit, 200000, 30],
+                [TransactionTypeEnum::Withdraw, 50000, 25],
+                [TransactionTypeEnum::Deposit, 120000, 20],
+                [TransactionTypeEnum::Withdraw, 80000, 15],
+                [TransactionTypeEnum::Withdraw, 35000, 10],
+                [TransactionTypeEnum::Deposit, 60000, 5],
+                [TransactionTypeEnum::Withdraw, 15000, 2],
+                [TransactionTypeEnum::Deposit, 25000, 1],
             ];
 
             $balance = 0;
